@@ -10,6 +10,7 @@ import (
 	"os"
 	"os/exec"
 	"revai/config"
+	"time"
 )
 
 type OpenAIMessage struct {
@@ -67,12 +68,17 @@ func main() {
 		os.Exit(1)
 	}
 
-	fmt.Println("=== AI Code Review ===")
-	fmt.Println(review)
+	curDate := time.Now()
+	fileName := fmt.Sprintf("cr%04d%02d%02d_%02d%02d.md", curDate.Year(), curDate.Month(), curDate.Day(), curDate.Hour(), curDate.Minute())
+	err = os.WriteFile(fileName, []byte(review), 0644)
+	if err != nil {
+		fmt.Printf("Error writing file: %v\n", err)
+		os.Exit(1)
+	}
 }
 
 func getGitDiff() (string, error) {
-	cmd := exec.Command("git", "diff", "--cached")
+	cmd := exec.Command("git", "diff")
 	var out bytes.Buffer
 	cmd.Stdout = &out
 	err := cmd.Run()
@@ -116,8 +122,6 @@ func getCodeReview(diff string, cfg config.Config) (string, error) {
 	if err != nil {
 		return "", err
 	}
-
-	fmt.Println(string(jsonBody))
 
 	req, err := http.NewRequest("POST", cfg.AI.ApiBase, bytes.NewBuffer(jsonBody))
 	if err != nil {
