@@ -1,0 +1,12 @@
+{
+    "role": "user",
+    "prompt": "Проведи строгое код-ревью на русском языке. Будь конструктивным. Формат: \n 1. Проблема (серьезность) \n - Описание \n - Рекомендация по исправлению",
+    "ai": {
+        "model": "Your Model",
+        "provider": "openai",
+        "apiKey": "YOUR_API_KEY",
+        "apiBase": "https://api.openai.com/v1/chat/completions"
+    },
+    "excludeDirs": [],
+    "excludeFiles": []
+}
